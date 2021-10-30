@@ -4,6 +4,7 @@ import express from 'express';
 
 import models from './models';
 import routes from './routes';
+// const akto_log = require("express-api-logging")
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Custom Middleware
+
+// app.use(akto_log.init(['localhost:9092'],'av'))
 
 app.use((req, res, next) => {
   req.context = {
