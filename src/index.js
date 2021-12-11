@@ -5,7 +5,6 @@ import express from 'express';
 import models from './models';
 import routes from './routes';
 const akto_log = require("express-api-logging")
-const { Kafka } = require('kafkajs')
 
 const app = express();
 
@@ -22,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Custom Middleware
 
-app.use(akto_log.init(['172.20.0.3:9092'],'akto.api.logs'))
+app.use(akto_log.init("akto.api.logs","1000000", 2))
 
 app.use((req, res, next) => {
   req.context = {
@@ -39,15 +38,13 @@ app.use('/users', routes.user);
 app.use('/messages', routes.message);
 
 // * Start * //
-const kafka = new Kafka({
-  clientId: 'my-app',
-  brokers: ['172.26.0.3:9092'],
-})
-let producer = kafka.producer()
+const broker_id = process.env.AKTO_CONNECT_IP
+let producer = akto_log.getKafkaProducer('my-app', [broker_id])
+
 producer.connect().then(() => {
   app.listen(process.env.PORT, () => {
     console.log(`Example app listening on port ${process.env.PORT}!`);
   });
-  app.locals.producer = producer;
+  app.locals.akto_kafka_producer = producer;
 });
 

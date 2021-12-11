@@ -21,7 +21,6 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-api-logging": "file:../../akto-security/express-api-logging",
-    "kafkajs": "^1.15.0",
     "uuid": "^7.0.3"
   }
 }
